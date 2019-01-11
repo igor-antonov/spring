@@ -1,27 +1,34 @@
-package ru.otus;
+package ru.otus.service;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;;
+import com.opencsv.CSVReaderBuilder;
+import ru.otus.Main;
+import ru.otus.QuestionScanner;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CSVQuestionsReader {
+/**
+ * Created by Igor on 18.12.2018.
+ */
+public class ExamServiceCSV implements ExamService {
 
-    public CSVQuestionsReader(String csvPath){
+    public ExamServiceCSV(String csvPath) {
         this.csvPath = csvPath;
     }
 
     private String csvPath;
-    private Map<String, String> answers = new HashMap<String, String>();
 
-    public Map<String, String> getAnswers(){
-        return answers;
+    public Map<String, String> getQuestions() {
+        return questions;
     }
 
-    public void setAnswers(){
+    private Map<String, String> questions = new HashMap<String, String>();
+    private Integer correctAnswerCount = 0;
+
+    public void readQuestions(){
         try
         {
             final CSVParser parser =
@@ -37,12 +44,23 @@ public class CSVQuestionsReader {
                             .build();
             String [] nextLine;
             while ((nextLine = reader.readNext()) != null) {
-                answers.put(nextLine[0], nextLine[1]);
+                questions.put(nextLine[0], nextLine[1]);
             }
         }
         catch (Exception e)
         {
             System.out.println("Ошибка при получении CSV: " + e.getMessage() + e.getStackTrace());
         }
+    }
+
+    public int checkTest(QuestionScanner questionScanner) {
+        for (Map.Entry<String, String> question : questions.entrySet()) {
+            System.out.println(question.getKey());
+            String answer = questionScanner.ask(question.getKey());
+            if (question.getValue().equals(answer)) {
+                correctAnswerCount++;
+            }
+        }
+        return correctAnswerCount;
     }
 }
