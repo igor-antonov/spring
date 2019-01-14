@@ -5,7 +5,7 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import ru.otus.Main;
-import ru.otus.QuestionScanner;
+
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,18 +15,19 @@ import java.util.Map;
  */
 public class ExamServiceCSV implements ExamService {
 
-    public ExamServiceCSV(String csvPath) {
+    public ExamServiceCSV(String csvPath, InputService inputService) {
         this.csvPath = csvPath;
+        this.inputService = inputService;
     }
 
     private String csvPath;
+    private InputService inputService;
+    private Map<String, String> questions = new HashMap<String, String>();
+    private Integer correctAnswerCount = 0;
 
     public Map<String, String> getQuestions() {
         return questions;
     }
-
-    private Map<String, String> questions = new HashMap<String, String>();
-    private Integer correctAnswerCount = 0;
 
     public void readQuestions(){
         try
@@ -53,10 +54,10 @@ public class ExamServiceCSV implements ExamService {
         }
     }
 
-    public int checkTest(QuestionScanner questionScanner) {
+    public int checkTest() {
         for (Map.Entry<String, String> question : questions.entrySet()) {
             System.out.println(question.getKey());
-            String answer = questionScanner.ask(question.getKey());
+            String answer = inputService.ask(question.getKey());
             if (question.getValue().equals(answer)) {
                 correctAnswerCount++;
             }

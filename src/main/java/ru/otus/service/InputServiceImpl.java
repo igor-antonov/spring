@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.service;
 
 import java.io.InputStream;
 import java.util.Scanner;
@@ -6,10 +6,12 @@ import java.util.Scanner;
 /**
  * Created by Igor on 18.12.2018.
  */
-public class QuestionScanner{
+
+
+public class InputServiceImpl implements InputService{
     private final Scanner scanner;
 
-    public QuestionScanner(InputStream in) {
+    public InputServiceImpl(InputStream in) {
         scanner = new Scanner(in);
     }
 

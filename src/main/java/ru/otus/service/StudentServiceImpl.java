@@ -1,37 +1,34 @@
 package ru.otus.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
-import org.springframework.stereotype.Service;
-import ru.otus.QuestionScanner;
 import ru.otus.Student;
-import java.util.Locale;
 
-@Service
 public class StudentServiceImpl implements StudentService {
 
-    private MessageSource ms;
-
-    @Autowired
-    private Locale locale;
+    private LocalizedService localizedService;
+    private InputService inputService;
     private Student student = new Student();
+    private String firstName;
+    private String secondName;
 
-    @Autowired
-    public StudentServiceImpl(MessageSource ms){
-        this.ms = ms;
+    public StudentServiceImpl(LocalizedService localizedService, InputService inputService){
+        this.localizedService = localizedService;
+        this.inputService = inputService;
     }
 
-    public void setAttr(String attr, QuestionScanner questionScanner) {
-
-        if (attr == ms.getMessage("name.first", null, locale)){
-            System.out.println(attr);
-            student.setFirst_name(questionScanner.ask(attr));
-        }
-        else if (attr == ms.getMessage("name.second", null, locale)){
-            System.out.println(attr);
-            student.setSecond_name(questionScanner.ask(attr));
-        }
+    @Override
+    public void askStudentFirstName() {
+        firstName = localizedService.getMessage("name.first");
+        System.out.println(firstName);
+        student.setFirstName(inputService.ask(firstName));
     }
+
+    @Override
+    public void askStudentSecondName() {
+        secondName = localizedService.getMessage("name.second");
+        System.out.println(secondName);
+        student.setSecondName(inputService.ask(secondName));
+    }
+
     public Student getStudent(){
         return student;
     }

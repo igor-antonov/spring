@@ -5,18 +5,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import ru.otus.QuestionScanner;
+import ru.otus.service.InputServiceImpl;
 import ru.otus.service.*;
-
-import java.util.Locale;
 
 @Configuration
 public class ServicesConfig {
-
-    @Bean
-    public Locale locale(){
-        return Locale.getDefault();
-    }
 
     @Bean
     public MessageSource messageSource() {
@@ -27,14 +20,24 @@ public class ServicesConfig {
         return ms;
     }
 
-    @Bean(name = "scanner")
-    public QuestionScanner questionScanner(){
-        return new QuestionScanner(System.in);
+    @Bean
+    public LocalizedService messageService(MessageSource ms){
+        return new LocalizedServiceImpl(ms);
     }
 
     @Bean
-    public ExamService examService(MessageSource ms, Locale locale){
-        return new ExamServiceCSV(ms.getMessage("csv.path",null, locale));
+    public InputService inputService(){
+        return new InputServiceImpl(System.in);
+    }
+
+    @Bean
+    public StudentService studentService(LocalizedService localizedService, InputService inputService){
+        return new StudentServiceImpl(localizedService, inputService);
+    }
+
+    @Bean
+    public ExamService examService(LocalizedService localizedService, InputService inputService){
+        return new ExamServiceCSV(localizedService.getCSVPath(), inputService);
     }
 
     @Bean
