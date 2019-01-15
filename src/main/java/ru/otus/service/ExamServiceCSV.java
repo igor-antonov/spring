@@ -7,7 +7,9 @@ import com.opencsv.CSVReaderBuilder;
 import ru.otus.Main;
 
 import java.io.InputStreamReader;
+import java.util.Formatter;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -15,8 +17,8 @@ import java.util.Map;
  */
 public class ExamServiceCSV implements ExamService {
 
-    public ExamServiceCSV(String csvPath, InputService inputService) {
-        this.csvPath = csvPath;
+    public ExamServiceCSV(String csvPath, InputService inputService, Locale locale) {
+        this.csvPath = this.formatter.format(csvPath, locale.toLanguageTag()).toString();
         this.inputService = inputService;
     }
 
@@ -24,6 +26,7 @@ public class ExamServiceCSV implements ExamService {
     private InputService inputService;
     private Map<String, String> questions = new HashMap<String, String>();
     private Integer correctAnswerCount = 0;
+    private Formatter formatter = new Formatter();
 
     public Map<String, String> getQuestions() {
         return questions;

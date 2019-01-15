@@ -19,6 +19,9 @@ public class LocalizedServiceImpl implements LocalizedService {
         this.messageSource = messageSource;
     }
 
+    public Locale getLocale() {
+        return this.locale;
+    }
     public String getMessage(String message){
         return messageSource.getMessage(message, null, locale);
     }

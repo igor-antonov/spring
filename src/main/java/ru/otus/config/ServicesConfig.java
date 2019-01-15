@@ -1,15 +1,20 @@
 package ru.otus.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import ru.otus.service.InputServiceImpl;
 import ru.otus.service.*;
 
 @Configuration
+@PropertySource({"classpath:application.properties"})
 public class ServicesConfig {
+    @Value("${csv.path}")
+    private String csvPath;
 
     @Bean
     public MessageSource messageSource() {
@@ -36,8 +41,8 @@ public class ServicesConfig {
     }
 
     @Bean
-    public ExamService examService(LocalizedService localizedService, InputService inputService){
-        return new ExamServiceCSV(localizedService.getCSVPath(), inputService);
+    public ExamService examService(LocalizedService localizedService, InputService inputService) {
+        return new ExamServiceCSV(this.csvPath, inputService, localizedService.getLocale());
     }
 
     @Bean

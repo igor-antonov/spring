@@ -37,7 +37,8 @@ public class SpringTest {
         ms = context.getBean(MessageSource.class);
         localizedService = context.getBean(LocalizedService.class);
         inputServiceMock = mock(InputServiceImpl.class);
-        examService = new ExamServiceCSV(localizedService.getCSVPath(), inputServiceMock);
+        examService = new ExamServiceCSV("Questions_ru-RU.csv", inputServiceMock,
+                localizedService.getLocale());
         examService.readQuestions();
         studentService = new StudentServiceImpl(localizedService, inputServiceMock);
     }
@@ -96,7 +97,8 @@ public class SpringTest {
     @DisplayName("Test english questions")
     public void getEnglishLocalQuestions(){
         LocalizedService localizedServiceEn = new LocalizedServiceImpl(Locale.ENGLISH, ms);
-        ExamService examServiceEn = new ExamServiceCSV(localizedServiceEn.getCSVPath(), inputServiceMock);
+        ExamService examServiceEn = new ExamServiceCSV("Questions_en.csv",
+                inputServiceMock, localizedServiceEn.getLocale());
         examServiceEn.readQuestions();
         when(inputServiceMock.ask("Third planet from Sun")).thenReturn("Earth");
         when(inputServiceMock.ask("Year of the end of world war ii")).thenReturn("1945");
