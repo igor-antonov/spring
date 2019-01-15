@@ -1,14 +1,31 @@
 package ru.otus;
 
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
+import ru.otus.service.*;
 
+@ComponentScan
 public class Main {
     public static void main(String[] args) {
-        ClassPathXmlApplicationContext context =
-                new ClassPathXmlApplicationContext("/context.xml");
-        CSVQuestionsReader reader = context.getBean(CSVQuestionsReader.class);
-        reader.setAnswers();
+
+        AnnotationConfigApplicationContext context =
+                new AnnotationConfigApplicationContext(Main.class);
+
+
         ExamService examService = context.getBean(ExamService.class);
-        System.out.println("Количество правильных ответов: " + examService.checkTest(new QuestionScanner(System.in, System.out)));
+        examService.readQuestions();
+        StudentService studentService = context.getBean(StudentService.class);
+        LocalizedService messageService = context.getBean(LocalizedService.class);
+
+        studentService.askStudentFirstName();
+        studentService.askStudentSecondName();
+
+        Student student = studentService.getStudent();
+        String result = messageService.getMessage("result");
+        String studentTag = messageService.getMessage("student.tag");
+
+        System.out.println(result + " " + examService.checkTest());
+        System.out.println(studentTag + " " + student.getFirstName() + " " + student.getSecondName());
+
     }
 }

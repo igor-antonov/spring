@@ -1,19 +1,18 @@
-package ru.otus;
+package ru.otus.service;
 
 import java.io.InputStream;
-import java.io.PrintStream;
 import java.util.Scanner;
 
 /**
  * Created by Igor on 18.12.2018.
  */
-public class QuestionScanner {
-    private final Scanner scanner;
-    private final PrintStream out;
 
-    public QuestionScanner(InputStream in, PrintStream out) {
+
+public class InputServiceImpl implements InputService{
+    private final Scanner scanner;
+
+    public InputServiceImpl(InputStream in) {
         scanner = new Scanner(in);
-        this.out = out;
     }
 
     public String ask(String message) {
